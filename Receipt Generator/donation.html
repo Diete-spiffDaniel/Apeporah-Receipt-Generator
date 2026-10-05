@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Support QuickReceipt and help keep free receipt generation tools available for small businesses and independent sellers.">
+  <meta name="theme-color" content="#0f766e">
+  <title>Support QuickReceipt | Donation</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --accent: #0f766e;
+      --accent-strong: #115e59;
+      --accent-soft: #ccfbf1;
+      --ink: #172522;
+      --muted: #63716e;
+      --line: #dce5e2;
+      --surface: #ffffff;
+      --page: #f3f7f6;
+      --soft: #edf4f2;
+      --shadow: 0 12px 36px rgba(20,47,42,.09);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--page); color: var(--ink); font-size: 15px; line-height: 1.5; }
+    a { color: inherit; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .wrap { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+    .topbar { background: var(--surface); border-bottom: 1px solid var(--line); }
+    .topbar-inner { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+    .brand { display: flex; align-items: center; gap: 11px; text-decoration: none; }
+    .brand-mark { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 12px; background: var(--accent); color: #fff; font-weight: 800; font-size: 20px; }
+    .brand-name { display: block; font-size: 19px; font-weight: 780; letter-spacing: -.04em; }
+    .pitch { display: block; margin: 0; color: var(--muted); font-size: 13px; }
+    .nav { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .button { display: inline-flex; align-items: center; justify-content: center; min-height: 40px; padding: 8px 13px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface); color: var(--ink); font-weight: 650; }
+    .button.small { min-height: 34px; padding: 5px 10px; font-size: 13px; }
+    .theme-button { width: 42px; height: 40px; border: 1px solid var(--line); border-radius: 9px; padding: 0; background: var(--surface); color: var(--ink); font: inherit; font-size: 17px; cursor: pointer; }
+    .button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .button:hover { border-color: var(--accent); text-decoration: none; }
+    .button.primary:hover { background: var(--accent-strong); }
+    .button:focus-visible, .theme-button:focus-visible, a:focus-visible { outline: 3px solid color-mix(in srgb, var(--accent) 32%, transparent); outline-offset: 1px; }
+    main { padding: 42px 0 58px; }
+    .hero { padding: 28px 0 22px; }
+    .eyebrow { margin: 0 0 8px; color: var(--accent); font-weight: 800; letter-spacing: .08em; text-transform: uppercase; font-size: 12px; }
+    h1 { margin: 0; font-size: clamp(30px, 4vw, 46px); line-height: 1.08; letter-spacing: -.05em; }
+    .lead { max-width: 700px; color: var(--muted); font-size: 18px; margin: 14px 0 0; }
+    .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-top: 28px; }
+    .card { background: var(--surface); border: 1px solid var(--line); border-radius: 15px; box-shadow: 0 3px 12px rgba(20,47,42,.035); padding: 24px; }
+    .card h2 { font-size: 22px; margin: 0 0 12px; }
+    .card p, .card li { color: var(--muted); }
+    .card ul { margin: 10px 0 0; padding-left: 20px; }
+    .amounts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 18px 0; }
+    .amount { display: grid; place-items: center; min-height: 46px; border: 1px solid var(--line); border-radius: 10px; background: var(--soft); font-weight: 700; }
+    .callout { margin-top: 26px; background: linear-gradient(135deg, var(--accent-soft), rgba(255,255,255,0)); border: 1px solid var(--line); border-radius: 15px; padding: 24px; }
+    .callout p { margin: 0; color: var(--ink); max-width: 760px; }
+    footer { padding: 22px 0 34px; color: var(--muted); font-size: 13px; }
+    .footer-inner { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 20px; }
+    body.dark {
+      color-scheme: dark;
+      --ink: #e7eeeb; --muted: #a6b4af; --line: #34433e; --surface: #1c2925;
+      --page: #121b18; --soft: #202e29; --accent-soft: #163e37; --accent-strong: #5eead4;
+      --shadow: 0 12px 36px rgba(0,0,0,.32);
+    }
+    body.dark .callout { background: linear-gradient(135deg, var(--accent-soft), transparent); }
+    @media (max-width: 760px) {
+      .grid { grid-template-columns: 1fr; }
+      .amounts { grid-template-columns: 1fr 1fr; }
+      .nav { justify-content: flex-end; }
+      .topbar-inner { min-height: 68px; }
+      .pitch { display: none; }
+    }
+    @media (max-width: 420px) {
+      .amounts { grid-template-columns: 1fr; }
+      .button { width: 100%; }
+      .nav { width: 100%; justify-content: space-between; }
+      .topbar-inner { flex-direction: column; align-items: flex-start; padding: 12px 0; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="brand" href="index.html" aria-label="QuickReceipt home">
+        <span class="brand-mark" aria-hidden="true">Q</span>
+        <span><span class="brand-name">QuickReceipt</span><span class="pitch">Professional receipts, ready in seconds.</span></span>
+      </a>
+      <nav class="nav header-actions" aria-label="Main navigation">
+        <a class="button small" href="index.html">Generator</a>
+        <a class="button small" href="how-to-use.html">How to use</a>
+        <a class="button small primary" href="donation.html" aria-current="page">Donation</a>
+        <a class="button small" href="contact.html">Contact</a>
+        <button class="theme-button" id="themeBtn" type="button" aria-label="Switch color theme" title="Switch color theme">☾</button>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <div class="wrap hero">
+      <p class="eyebrow">Support development</p>
+      <h1>Help keep QuickReceipt free and useful.</h1>
+      <p class="lead">QuickReceipt is built to stay simple, private, and free in the browser. If it has saved you time, your support helps keep future improvements rolling out without compromising the experience.</p>
+    </div>
+    <div class="wrap grid">
+      <section class="card">
+        <h2>Why support it?</h2>
+        <p>Support helps cover the time spent maintaining compatibility, improving the receipt experience, and keeping the tool dependable for small businesses and freelancers.</p>
+        <ul>
+          <li>Preserves the no-sign-up experience</li>
+          <li>Funds ongoing feature improvements</li>
+          <li>Supports better print and export quality</li>
+        </ul>
+      </section>
+      <section class="card">
+        <h2>Give what feels right</h2>
+        <div class="amounts" aria-label="Suggested donation values">
+          <div class="amount">₦500</div>
+          <div class="amount">₦1,000</div>
+          <div class="amount">₦2,500</div>
+        </div>
+        <h3>Donate by bank transfer</h3>
+        <p><strong>Bank:</strong> OPAY<br>
+          <strong>Account name:</strong> Diete-Spiff Ayebawanaemi Daniel<br>
+          <strong>Account number:</strong> 8104590137</p>
+        <p>Every contribution helps keep the project moving forward. If you’d rather just say thanks, sharing the tool with another seller is a meaningful way to support it too.</p>
+      </section>
+      <section class="card">
+        <h2>How it stays respectful</h2>
+        <p>QuickReceipt stays browser-only and does not collect customer or sales data. Donations are optional and support the ongoing maintenance of a tool designed to help independent businesses work faster.</p>
+      </section>
+    </div>
+    <div class="wrap callout">
+      <p><strong>Thank you</strong> for using QuickReceipt and for supporting tools that make small business admin easier without adding friction.</p>
+    </div>
+  </main>
+  <footer>
+    <div class="wrap footer-inner">
+      <span>Create receipts only for sales you actually made.</span>
+      <span><a href="index.html">Return to generator</a> · <a href="how-to-use.html">How to use</a> · <a href="contact.html">Contact</a></span>
+    </div>
+  </footer>
+  <script>
+    (() => {
+      const themeBtn = document.getElementById("themeBtn");
+      const storageKey = "quickreceipt.theme.v1";
+      const setTheme = (dark) => {
+        document.body.classList.toggle("dark", dark);
+        themeBtn.textContent = dark ? "☀" : "☾";
+      };
+      try { setTheme(localStorage.getItem(storageKey) === "dark"); }
+      catch (error) { console.warn("Could not read saved theme preference.", error); }
+      themeBtn.addEventListener("click", () => {
+        const dark = !document.body.classList.contains("dark");
+        setTheme(dark);
+        try { localStorage.setItem(storageKey, dark ? "dark" : "light"); }
+        catch (error) { console.warn("Could not save theme preference.", error); }
+      });
+    })();
+  </script>
+</body>
+</html>

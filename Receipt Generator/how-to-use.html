@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Learn how to create, customize, and print a professional receipt with QuickReceipt in a few simple steps.">
+  <meta name="theme-color" content="#0f766e">
+  <title>How to use QuickReceipt</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --accent: #0f766e;
+      --accent-strong: #115e59;
+      --accent-soft: #ccfbf1;
+      --ink: #172522;
+      --muted: #63716e;
+      --line: #dce5e2;
+      --surface: #ffffff;
+      --page: #f3f7f6;
+      --soft: #edf4f2;
+      --shadow: 0 12px 36px rgba(20,47,42,.09);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--page); color: var(--ink); font-size: 15px; line-height: 1.5; }
+    a { color: inherit; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .wrap { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+    .topbar { background: var(--surface); border-bottom: 1px solid var(--line); }
+    .topbar-inner { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+    .brand { display: flex; align-items: center; gap: 11px; text-decoration: none; }
+    .brand-mark { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 12px; background: var(--accent); color: #fff; font-weight: 800; font-size: 20px; }
+    .brand-name { display: block; font-size: 19px; font-weight: 780; letter-spacing: -.04em; }
+    .pitch { display: block; margin: 0; color: var(--muted); font-size: 13px; }
+    .nav { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .button { display: inline-flex; align-items: center; justify-content: center; min-height: 40px; padding: 8px 13px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface); color: var(--ink); font-weight: 650; }
+    .button.small { min-height: 34px; padding: 5px 10px; font-size: 13px; }
+    .theme-button { width: 42px; height: 40px; border: 1px solid var(--line); border-radius: 9px; padding: 0; background: var(--surface); color: var(--ink); font: inherit; font-size: 17px; cursor: pointer; }
+    .button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .button:hover { border-color: var(--accent); text-decoration: none; }
+    .button:focus-visible, .theme-button:focus-visible, a:focus-visible { outline: 3px solid color-mix(in srgb, var(--accent) 32%, transparent); outline-offset: 1px; }
+    main { padding: 42px 0 60px; }
+    .hero { padding: 8px 0 24px; }
+    .eyebrow { margin: 0 0 8px; color: var(--accent); font-weight: 800; letter-spacing: .08em; text-transform: uppercase; font-size: 12px; }
+    h1 { margin: 0; font-size: clamp(30px, 4vw, 46px); line-height: 1.08; letter-spacing: -.05em; }
+    .lede { color: var(--muted); max-width: 700px; margin: 14px 0 0; font-size: 18px; }
+    .steps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 15px; }
+    .step, .note { background: var(--surface); border: 1px solid var(--line); border-radius: 15px; box-shadow: 0 3px 12px rgba(20,47,42,.035); padding: 22px; }
+    .step-number { display: grid; place-items: center; width: 32px; height: 32px; margin-bottom: 12px; border-radius: 10px; background: var(--accent-soft); color: var(--accent-strong); font-weight: 800; }
+    h2 { margin: 0 0 8px; font-size: 19px; letter-spacing: -.02em; }
+    .step p, .note p { margin: 0; color: var(--muted); }
+    .note { margin-top: 20px; background: var(--soft); box-shadow: none; }
+    .note strong { color: var(--ink); }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 24px; }
+    footer { padding: 22px 0 34px; color: var(--muted); font-size: 13px; }
+    .footer-inner { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 20px; }
+    body.dark {
+      color-scheme: dark;
+      --ink: #e7eeeb; --muted: #a6b4af; --line: #34433e; --surface: #1c2925;
+      --page: #121b18; --soft: #202e29; --accent-soft: #163e37; --accent-strong: #5eead4;
+      --shadow: 0 12px 36px rgba(0,0,0,.32);
+    }
+    @media (max-width: 700px) {
+      .steps { grid-template-columns: 1fr; }
+      .topbar-inner { min-height: 68px; }
+      .pitch { display: none; }
+    }
+    @media (max-width: 440px) {
+      .topbar-inner { align-items: flex-start; flex-direction: column; padding: 12px 0; }
+      .nav { width: 100%; }
+      .button { flex: 1; padding-inline: 8px; font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="brand" href="index.html" aria-label="QuickReceipt home">
+        <span class="brand-mark" aria-hidden="true">Q</span>
+        <span><span class="brand-name">QuickReceipt</span><span class="pitch">Professional receipts, ready in seconds.</span></span>
+      </a>
+      <nav class="nav header-actions" aria-label="Main navigation">
+        <a class="button small" href="index.html">Generator</a>
+        <a class="button small primary" href="how-to-use.html" aria-current="page">How to use</a>
+        <a class="button small" href="donation.html">Donation</a>
+        <a class="button small" href="contact.html">Contact</a>
+        <button class="theme-button" id="themeBtn" type="button" aria-label="Switch color theme" title="Switch color theme">☾</button>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <div class="wrap">
+      <section class="hero" aria-labelledby="pageTitle">
+        <p class="eyebrow">Quick start guide</p>
+        <h1 id="pageTitle">How to create a receipt</h1>
+        <p class="lede">Build a polished receipt for a real sale in a few quick steps. Your preview updates as you enter details, and your draft stays in this browser.</p>
+      </section>
+      <section class="steps" aria-label="Receipt creation steps">
+        <article class="step">
+          <span class="step-number">1</span>
+          <h2>Enter your business details</h2>
+          <p>Add your business name and any address, contact details, tax ID, or logo you want to show on the receipt. Your details are saved in this browser for your next visit.</p>
+        </article>
+        <article class="step">
+          <span class="step-number">2</span>
+          <h2>Set up the receipt</h2>
+          <p>Check the receipt number and date, then optionally enter staff and customer details. The number is generated automatically and increments for new receipts.</p>
+        </article>
+        <article class="step">
+          <span class="step-number">3</span>
+          <h2>Add the sale items</h2>
+          <p>For each item, enter a description, quantity, and unit price. Use Add item for another line, Duplicate to copy a line, or the remove button to delete one. Line totals and subtotal update automatically.</p>
+        </article>
+        <article class="step">
+          <span class="step-number">4</span>
+          <h2>Apply adjustments and payment</h2>
+          <p>Choose a currency, and add any discount, tax, tip, or cash payment information. Turn on Prices include tax if your item prices already include tax. For card payments, you can enter the last four digits.</p>
+        </article>
+        <article class="step">
+          <span class="step-number">5</span>
+          <h2>Review and style the preview</h2>
+          <p>Choose Thermal, Classic, or Modern. Review the amounts, tax treatment, and payment details. Keep the SAMPLE watermark on while testing; turn it off for a receipt you are ready to issue.</p>
+        </article>
+        <article class="step">
+          <span class="step-number">6</span>
+          <h2>Print, download, or copy</h2>
+          <p>Choose Print receipt, Download PDF, Download PNG, or Copy plain text. For PDF and PNG downloads, your browser needs an internet connection to load the pinned export libraries.</p>
+        </article>
+      </section>
+      <aside class="note">
+        <h2>A note about your records</h2>
+        <p><strong>Check your receipt before sharing it.</strong> Tax and receipt requirements depend on your location. QuickReceipt helps prepare a receipt but does not determine your tax obligations. Your receipt details stay in your browser; use Clear all data on the generator to remove saved business details and draft.</p>
+      </aside>
+      <div class="actions">
+        <a class="button primary" href="index.html">Open receipt generator</a>
+        <a class="button" href="contact.html">Questions or feedback?</a>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <div class="wrap footer-inner">
+      <span>Create receipts only for sales you actually made.</span>
+      <span><a href="index.html">Generator</a> · <a href="donation.html">Donation</a> · <a href="contact.html">Contact</a></span>
+    </div>
+  </footer>
+  <script>
+    (() => {
+      const themeBtn = document.getElementById("themeBtn");
+      const storageKey = "quickreceipt.theme.v1";
+      const setTheme = (dark) => {
+        document.body.classList.toggle("dark", dark);
+        themeBtn.textContent = dark ? "☀" : "☾";
+      };
+      try { setTheme(localStorage.getItem(storageKey) === "dark"); }
+      catch (error) { console.warn("Could not read saved theme preference.", error); }
+      themeBtn.addEventListener("click", () => {
+        const dark = !document.body.classList.contains("dark");
+        setTheme(dark);
+        try { localStorage.setItem(storageKey, dark ? "dark" : "light"); }
+        catch (error) { console.warn("Could not save theme preference.", error); }
+      });
+    })();
+  </script>
+</body>
+</html>

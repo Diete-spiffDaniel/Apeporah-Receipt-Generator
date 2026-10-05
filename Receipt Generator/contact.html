@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Contact QuickReceipt for questions, feedback, feature ideas, or support.">
+  <meta name="theme-color" content="#0f766e">
+  <title>Contact QuickReceipt</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --accent: #0f766e;
+      --accent-strong: #115e59;
+      --accent-soft: #ccfbf1;
+      --ink: #172522;
+      --muted: #63716e;
+      --line: #dce5e2;
+      --surface: #ffffff;
+      --page: #f3f7f6;
+      --soft: #edf4f2;
+      --shadow: 0 12px 36px rgba(20,47,42,.09);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--page); color: var(--ink); font-size: 15px; line-height: 1.5; }
+    a { color: inherit; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .wrap { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+    .topbar { background: var(--surface); border-bottom: 1px solid var(--line); }
+    .topbar-inner { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+    .brand { display: flex; align-items: center; gap: 11px; text-decoration: none; }
+    .brand-mark { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 12px; background: var(--accent); color: #fff; font-weight: 800; font-size: 20px; }
+    .brand-name { display: block; font-size: 19px; font-weight: 780; letter-spacing: -.04em; }
+    .pitch { display: block; margin: 0; color: var(--muted); font-size: 13px; }
+    .nav { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .button { display: inline-flex; align-items: center; justify-content: center; min-height: 40px; padding: 8px 13px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface); color: var(--ink); font-weight: 650; cursor: pointer; }
+    .button.small { min-height: 34px; padding: 5px 10px; font-size: 13px; }
+    .theme-button { width: 42px; height: 40px; border: 1px solid var(--line); border-radius: 9px; padding: 0; background: var(--surface); color: var(--ink); font: inherit; font-size: 17px; cursor: pointer; }
+    .button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .button:hover { border-color: var(--accent); text-decoration: none; }
+    .button.primary:hover { background: var(--accent-strong); }
+    .button:focus-visible, .theme-button:focus-visible, a:focus-visible { outline: 3px solid color-mix(in srgb, var(--accent) 32%, transparent); outline-offset: 1px; }
+    main { padding: 42px 0 60px; }
+    .hero { padding: 10px 0 20px; }
+    .eyebrow { margin: 0 0 8px; color: var(--accent); font-weight: 800; letter-spacing: .08em; text-transform: uppercase; font-size: 12px; }
+    h1 { margin: 0; font-size: clamp(30px, 4vw, 46px); line-height: 1.08; letter-spacing: -.05em; }
+    .lede { color: var(--muted); max-width: 680px; margin: 14px 0 0; font-size: 18px; }
+    .layout { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 24px; margin-top: 26px; }
+    .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 15px; box-shadow: 0 3px 12px rgba(20,47,42,.035); padding: 24px; }
+    .info-list { display: grid; gap: 14px; }
+    .info-item { padding: 14px 16px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+    .info-item h2 { margin: 0 0 6px; font-size: 18px; }
+    .info-item p { margin: 0; color: var(--muted); }
+    form { display: grid; gap: 14px; }
+    label { display: block; margin-bottom: 6px; font-weight: 700; font-size: 13px; }
+    input, textarea { width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: var(--surface); color: var(--ink); font: inherit; }
+    textarea { min-height: 140px; resize: vertical; }
+    input:focus, textarea:focus { outline: 3px solid color-mix(in srgb, var(--accent) 24%, transparent); border-color: var(--accent); }
+    .meta { color: var(--muted); font-size: 12px; }
+    .status { min-height: 18px; color: var(--accent-strong); font-size: 13px; font-weight: 600; }
+    footer { padding: 22px 0 34px; color: var(--muted); font-size: 13px; }
+    .footer-inner { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 20px; }
+    body.dark {
+      color-scheme: dark;
+      --ink: #e7eeeb; --muted: #a6b4af; --line: #34433e; --surface: #1c2925;
+      --page: #121b18; --soft: #202e29; --accent-soft: #163e37; --accent-strong: #5eead4;
+      --shadow: 0 12px 36px rgba(0,0,0,.32);
+    }
+    @media (max-width: 760px) {
+      .layout { grid-template-columns: 1fr; }
+      .nav { justify-content: flex-end; }
+      .topbar-inner { min-height: 68px; }
+      .pitch { display: none; }
+    }
+    @media (max-width: 420px) {
+      .button { width: 100%; }
+      .nav { width: 100%; justify-content: space-between; }
+      .topbar-inner { flex-direction: column; align-items: flex-start; padding: 12px 0; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="brand" href="index.html" aria-label="QuickReceipt home">
+        <span class="brand-mark" aria-hidden="true">Q</span>
+        <span><span class="brand-name">QuickReceipt</span><span class="pitch">Professional receipts, ready in seconds.</span></span>
+      </a>
+      <nav class="nav header-actions" aria-label="Main navigation">
+        <a class="button small" href="index.html">Generator</a>
+        <a class="button small" href="how-to-use.html">How to use</a>
+        <a class="button small" href="donation.html">Donation</a>
+        <a class="button small primary" href="contact.html" aria-current="page">Contact</a>
+        <button class="theme-button" id="themeBtn" type="button" aria-label="Switch color theme" title="Switch color theme">☾</button>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <div class="wrap hero">
+      <p class="eyebrow">Contact</p>
+      <h1>Ask a question or share feedback.</h1>
+      <p class="lede">We’d love to hear how QuickReceipt is helping your business, what features would make it better, or how we can make the experience smoother.</p>
+    </div>
+    <div class="wrap layout">
+      <aside class="panel">
+        <div class="info-list">
+          <div class="info-item">
+            <h2>General questions</h2>
+            <p>Wondering how the generator works, how the pricing works, or how to get started? Reach out and we’ll help.</p>
+          </div>
+          <div class="info-item">
+            <h2>Feature requests</h2>
+            <p>Tell us what would make receipt creation easier for your shop, studio, or service business.</p>
+          </div>
+          <div class="info-item">
+            <h2>Feedback</h2>
+            <p>We appreciate hearing what is working well and what could be improved, especially on mobile.</p>
+          </div>
+        </div>
+      </aside>
+      <section class="panel">
+        <form id="contactForm" novalidate>
+          <div>
+            <label for="name">Name</label>
+            <input id="name" name="name" type="text" autocomplete="name" placeholder="Your name">
+          </div>
+          <div>
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com">
+          </div>
+          <div>
+            <label for="subject">Subject</label>
+            <input id="subject" name="subject" type="text" placeholder="How can we help?">
+          </div>
+          <div>
+            <label for="message">Message</label>
+            <textarea id="message" name="message" placeholder="Tell us a little more..."></textarea>
+          </div>
+          <div class="meta">This demo saves your message locally in the browser and does not send anything to a server.</div>
+          <button class="button primary" type="submit">Send message</button>
+          <div class="status" id="status" aria-live="polite"></div>
+        </form>
+      </section>
+    </div>
+  </main>
+  <footer>
+    <div class="wrap footer-inner">
+      <span>Create receipts only for sales you actually made.</span>
+      <span><a href="index.html">Back to generator</a> · <a href="how-to-use.html">How to use</a> · <a href="donation.html">Donation</a></span>
+    </div>
+  </footer>
+  <script>
+    const form = document.getElementById('contactForm');
+    const status = document.getElementById('status');
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const data = new FormData(form);
+      const name = String(data.get('name') || '').trim();
+      const email = String(data.get('email') || '').trim();
+      const subject = String(data.get('subject') || '').trim();
+      const message = String(data.get('message') || '').trim();
+      if (!name || !email || !subject || !message) {
+        status.textContent = 'Please complete every field before sending your message.';
+        status.style.color = '#b42318';
+        return;
+      }
+      try {
+        const previous = JSON.parse(localStorage.getItem('quickreceipt.contact.v1') || '[]');
+        const next = Array.isArray(previous) ? previous : [];
+        next.push({ name, email, subject, message, sentAt: new Date().toISOString() });
+        localStorage.setItem('quickreceipt.contact.v1', JSON.stringify(next));
+      } catch (error) {
+        console.warn('Could not save contact form locally.', error);
+      }
+      status.textContent = 'Thanks for reaching out. This demo stores your message locally in the browser only.';
+      status.style.color = '#0f766e';
+      form.reset();
+    });
+  </script>
+  <script>
+    (() => {
+      const themeBtn = document.getElementById("themeBtn");
+      const storageKey = "quickreceipt.theme.v1";
+      const setTheme = (dark) => {
+        document.body.classList.toggle("dark", dark);
+        themeBtn.textContent = dark ? "☀" : "☾";
+      };
+      try { setTheme(localStorage.getItem(storageKey) === "dark"); }
+      catch (error) { console.warn("Could not read saved theme preference.", error); }
+      themeBtn.addEventListener("click", () => {
+        const dark = !document.body.classList.contains("dark");
+        setTheme(dark);
+        try { localStorage.setItem(storageKey, dark ? "dark" : "light"); }
+        catch (error) { console.warn("Could not save theme preference.", error); }
+      });
+    })();
+  </script>
+</body>
+</html>

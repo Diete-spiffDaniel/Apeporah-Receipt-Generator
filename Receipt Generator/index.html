@@ -1,0 +1,853 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Create, customize, and print a professional receipt in seconds. Free, private, and entirely in your browser.">
+  <meta name="theme-color" content="#0f766e">
+  <title>QuickReceipt — Free online receipt generator</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --accent: #0f766e;
+      --accent-strong: #115e59;
+      --accent-soft: #ccfbf1;
+      --ink: #172522;
+      --muted: #63716e;
+      --line: #dce5e2;
+      --surface: #ffffff;
+      --page: #f3f7f6;
+      --soft: #edf4f2;
+      --danger: #b42318;
+      --success: #087443;
+      --shadow: 0 12px 36px rgba(20, 47, 42, .09);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--page); color: var(--ink); font-size: 15px; line-height: 1.5; }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    a { color: inherit; }
+    .wrap { width: min(1180px, calc(100% - 32px)); margin-inline: auto; }
+    .topbar { background: var(--surface); border-bottom: 1px solid var(--line); }
+    .topbar-inner { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .brand { display: flex; align-items: center; gap: 11px; text-decoration: none; }
+    .brand-mark { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 12px; background: var(--accent); color: #fff; font-weight: 800; font-size: 20px; }
+    .brand-name { font-size: 19px; font-weight: 780; letter-spacing: -.04em; }
+    .pitch { margin: 0; color: var(--muted); font-size: 13px; }
+    .header-actions { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 10px; }
+    .header-actions a { text-decoration: none; white-space: nowrap; }
+    .theme-button, .button { min-height: 40px; border: 1px solid var(--line); border-radius: 9px; padding: 8px 13px; background: var(--surface); color: var(--ink); font-weight: 650; }
+    .theme-button { width: 42px; padding: 0; font-size: 17px; }
+    .button:hover, .theme-button:hover { border-color: var(--accent); }
+    .button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .button.primary:hover { background: var(--accent-strong); }
+    .button.danger { color: var(--danger); }
+    .button.small { min-height: 34px; padding: 5px 10px; font-size: 13px; }
+    .intro { padding: 32px 0 20px; }
+    .eyebrow { margin: 0 0 7px; color: var(--accent); font-size: 12px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
+    h1 { margin: 0; font-size: clamp(27px, 4vw, 38px); line-height: 1.14; letter-spacing: -.045em; }
+    .intro p { color: var(--muted); margin: 10px 0 0; max-width: 640px; }
+    .workspace { display: grid; grid-template-columns: minmax(0, 1.03fr) minmax(0, .97fr); gap: 22px; align-items: start; padding-bottom: 52px; }
+    .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 15px; box-shadow: 0 3px 12px rgba(20,47,42,.035); }
+    .form-panel { padding: 21px; }
+    .panel-title { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding-bottom: 17px; border-bottom: 1px solid var(--line); }
+    .panel-title h2, .section-heading { margin: 0; font-size: 20px; letter-spacing: -.025em; }
+    .panel-title p { margin: 3px 0 0; font-size: 13px; color: var(--muted); }
+    .form-section { padding: 19px 0 2px; border-bottom: 1px solid var(--line); }
+    .section-label { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 13px; font-size: 14px; font-weight: 750; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+    .field { min-width: 0; margin-bottom: 12px; }
+    .field.full { grid-column: 1 / -1; }
+    label, .label { display: block; margin: 0 0 5px; color: var(--ink); font-size: 12px; font-weight: 680; }
+    .hint { display: block; margin-top: 5px; color: var(--muted); font-size: 11px; }
+    input, select, textarea { width: 100%; min-height: 41px; border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; background: var(--surface); color: var(--ink); }
+    textarea { min-height: 70px; resize: vertical; }
+    input:focus, select:focus, textarea:focus, button:focus-visible, a:focus-visible { outline: 3px solid color-mix(in srgb, var(--accent) 32%, transparent); outline-offset: 1px; border-color: var(--accent); }
+    input[type="checkbox"] { width: 17px; min-height: 17px; height: 17px; accent-color: var(--accent); }
+    input[type="file"] { padding: 7px; font-size: 12px; }
+    .check-row { display: flex; align-items: center; gap: 8px; margin: 8px 0 13px; font-size: 13px; }
+    .check-row label { margin: 0; font-weight: 550; }
+    .item-list { display: grid; gap: 10px; }
+    .item-row { padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--page); }
+    .item-row-top { display: grid; grid-template-columns: minmax(0,1fr) 75px 105px auto; gap: 8px; align-items: end; }
+    .item-row .field { margin: 0; }
+    .item-row input { min-height: 38px; padding: 7px 8px; }
+    .item-actions { display: flex; gap: 4px; padding-bottom: 2px; }
+    .icon-button { width: 32px; height: 34px; border: 1px solid var(--line); border-radius: 7px; background: var(--surface); color: var(--muted); }
+    .icon-button:hover { color: var(--danger); border-color: var(--danger); }
+    .line-total { display: flex; justify-content: flex-end; margin-top: 7px; color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+    .line-total strong { color: var(--ink); margin-left: 6px; }
+    .items-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+    .items-subtotal { color: var(--muted); font-size: 12px; }
+    .inline-choice { display: grid; grid-template-columns: minmax(0,1fr) 110px; gap: 8px; }
+    .pill-toggle { display: flex; align-items: center; min-height: 41px; gap: 8px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; font-size: 12px; }
+    .pill-toggle label { margin: 0; font-weight: 580; }
+    .payment-extra[hidden] { display: none; }
+    .validation { min-height: 18px; color: var(--danger); font-size: 12px; }
+    .form-footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding-top: 16px; }
+    .preview-column { position: sticky; top: 14px; }
+    .mobile-preview-button { display: none; }
+    .preview-panel { overflow: hidden; }
+    .preview-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 14px 16px; border-bottom: 1px solid var(--line); }
+    .preview-toolbar h2 { margin: 0; font-size: 17px; }
+    .template-select { width: auto; min-height: 35px; padding: 5px 26px 5px 9px; font-size: 12px; }
+    .preview-scroll { max-height: calc(100vh - 155px); overflow: auto; padding: 20px 15px; background: var(--soft); }
+    .receipt-paper { position: relative; isolation: isolate; margin: 0 auto; padding: 28px; background: #fff; color: #202a28; box-shadow: var(--shadow); font-size: 13px; overflow: hidden; }
+    .receipt-paper.template-thermal { width: min(100%, 340px); padding: 22px 18px; font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; font-size: 11px; }
+    .receipt-paper.template-classic { width: min(100%, 600px); min-height: 520px; padding: 42px 42px; font-size: 13px; }
+    .receipt-paper.template-modern { width: min(100%, 600px); min-height: 520px; padding: 34px; border-top: 5px solid var(--receipt-accent, #0f766e); font-size: 13px; }
+    .receipt-paper * { box-sizing: border-box; }
+    .receipt-head { text-align: center; margin-bottom: 15px; }
+    .template-modern .receipt-head { text-align: left; display: flex; align-items: center; gap: 13px; }
+    .receipt-logo { max-width: 72px; max-height: 58px; object-fit: contain; margin: 0 auto 9px; }
+    .template-modern .receipt-logo { margin: 0; width: 58px; height: 58px; }
+    .receipt-business { font-weight: 800; font-size: 18px; letter-spacing: -.035em; overflow-wrap: anywhere; line-height: 1.2; }
+    .template-thermal .receipt-business { font-size: 15px; }
+    .template-modern .receipt-business { color: var(--receipt-accent, #0f766e); }
+    .receipt-contact { margin-top: 6px; color: #58635f; white-space: pre-line; font-size: 11px; overflow-wrap: anywhere; }
+    .receipt-taxid { margin-top: 3px; color: #58635f; font-size: 10px; }
+    .receipt-divider { border: 0; border-top: 1px dashed #9ca8a3; margin: 13px 0; }
+    .template-classic .receipt-divider, .template-modern .receipt-divider { border-top-style: solid; border-color: #dce3e0; }
+    .receipt-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px; color: #56615e; font-size: 11px; }
+    .receipt-meta span:nth-child(2n) { text-align: right; }
+    .receipt-meta strong { color: #26312e; font-weight: 650; }
+    .receipt-table { width: 100%; border-collapse: collapse; margin-top: 11px; table-layout: fixed; }
+    .receipt-table th { padding: 6px 0; border-bottom: 1px solid #cdd6d2; color: #64716d; font-size: 10px; font-weight: 700; text-align: left; }
+    .receipt-table th:nth-child(n+2), .receipt-table td:nth-child(n+2) { text-align: right; }
+    .receipt-table td { padding: 8px 0; border-bottom: 1px solid #edf0ef; vertical-align: top; overflow-wrap: anywhere; }
+    .receipt-table .item-description { width: 39%; }
+    .receipt-table .qty-col { width: 13%; }
+    .receipt-table .price-col { width: 23%; }
+    .receipt-table .total-col { width: 25%; }
+    .template-thermal .receipt-table th, .template-thermal .receipt-table td { padding: 6px 0; }
+    .template-thermal .receipt-table .price-col { display: none; }
+    .receipt-totals { display: grid; gap: 5px; }
+    .receipt-total-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; color: #56615e; font-size: 12px; }
+    .receipt-total-row span:last-child { color: #26312e; font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+    .receipt-total-row.grand { margin-top: 4px; padding-top: 10px; border-top: 1px solid #b9c5c0; color: #18221f; font-size: 17px; font-weight: 800; }
+    .template-thermal .receipt-total-row.grand { font-size: 14px; }
+    .template-modern .receipt-total-row.grand { color: var(--receipt-accent, #0f766e); }
+    .receipt-payment { display: grid; gap: 5px; color: #56615e; font-size: 11px; }
+    .receipt-payment-row { display: flex; justify-content: space-between; gap: 10px; }
+    .receipt-payment-row strong { color: #26312e; text-align: right; }
+    .receipt-thanks { margin: 19px 0 0; text-align: center; color: #3d4945; font-size: 11px; overflow-wrap: anywhere; }
+    .sample-watermark { display: none; position: absolute; z-index: 2; top: 44%; left: 50%; transform: translate(-50%,-50%) rotate(-25deg); color: rgba(15,118,110,.12); border: 3px solid rgba(15,118,110,.12); padding: 5px 18px; font-size: 42px; line-height: 1; font-weight: 900; letter-spacing: .13em; pointer-events: none; white-space: nowrap; }
+    .is-sample .sample-watermark { display: block; }
+    .negative-change { margin: 12px 0 0; padding: 8px 10px; border-radius: 7px; background: #fff4e5; color: #854d0e; font-size: 11px; }
+    .preview-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; padding: 14px 16px; border-top: 1px solid var(--line); }
+    .preview-actions .button { width: 100%; min-height: 38px; font-size: 12px; }
+    .toast { position: fixed; z-index: 10; inset: auto 16px 18px; width: max-content; max-width: calc(100% - 32px); margin: auto; padding: 10px 15px; border-radius: 9px; background: #18322d; color: white; box-shadow: var(--shadow); font-size: 13px; }
+    .toast[hidden] { display: none; }
+    .content-section { padding: 44px 0; }
+    .content-section.alt { background: var(--surface); border-block: 1px solid var(--line); }
+    .section-heading { font-size: 26px; }
+    .section-intro { max-width: 640px; margin: 8px 0 22px; color: var(--muted); }
+    .steps { display: grid; grid-template-columns: repeat(3,1fr); gap: 15px; }
+    .step-card, .faq-item { padding: 18px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+    .step-number { display: grid; place-items: center; width: 30px; height: 30px; margin-bottom: 13px; border-radius: 9px; background: var(--accent-soft); color: var(--accent-strong); font-weight: 800; }
+    .step-card h3, .faq-item h3 { margin: 0 0 6px; font-size: 15px; }
+    .step-card p, .faq-item p { margin: 0; color: var(--muted); font-size: 13px; }
+    .faq-list { display: grid; grid-template-columns: repeat(2,1fr); gap: 11px; }
+    .faq-item:last-child { grid-column: 1 / -1; }
+    footer { padding: 24px 0 34px; color: var(--muted); font-size: 12px; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 15px; flex-wrap: wrap; }
+    .privacy-note { display: flex; align-items: center; gap: 7px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+    body.dark {
+      color-scheme: dark;
+      --ink: #e7eeeb; --muted: #a6b4af; --line: #34433e; --surface: #1c2925;
+      --page: #121b18; --soft: #202e29; --accent-soft: #163e37; --accent-strong: #5eead4;
+      --shadow: 0 12px 36px rgba(0,0,0,.32);
+    }
+    body.dark .button.primary { color: #fff; }
+    @media (max-width: 820px) {
+      .topbar-inner { flex-wrap: wrap; padding-block: 10px; }
+      .header-actions { width: 100%; justify-content: flex-start; gap: 7px; }
+      .workspace { grid-template-columns: 1fr; }
+      .preview-column { position: static; }
+      .preview-scroll { max-height: none; }
+      .steps { gap: 10px; }
+      .mobile-preview-button { display: inline-flex; position: fixed; z-index: 8; right: 14px; bottom: 14px; box-shadow: 0 6px 20px rgba(0,0,0,.2); }
+      body { padding-bottom: 66px; }
+      #receipt { scroll-margin-top: 16px; }
+    }
+    @media (max-width: 560px) {
+      .wrap { width: min(100% - 22px, 480px); }
+      .topbar-inner { min-height: 67px; }
+      .pitch { display: none; }
+      .intro { padding: 24px 0 17px; }
+      .form-panel { padding: 15px; }
+      .item-row-top { grid-template-columns: minmax(0,1fr) 66px 91px; }
+      .item-row-top .description-field { grid-column: 1 / -1; }
+      .item-actions { grid-column: 3; justify-content: flex-end; }
+      .steps, .faq-list { grid-template-columns: 1fr; }
+      .faq-item:last-child { grid-column: auto; }
+      .content-section { padding: 34px 0; }
+      .receipt-paper.template-classic { padding: 26px 22px; min-height: 0; }
+      .receipt-paper.template-modern { padding: 24px 20px; min-height: 0; }
+    }
+    @media (max-width: 380px) {
+      .grid { grid-template-columns: 1fr; gap: 0; }
+      .field.full { grid-column: auto; }
+      .header-actions .button { padding-inline: 9px; font-size: 12px; }
+      .receipt-paper { padding-inline: 14px; }
+    }
+    @media print {
+      @page { margin: 10mm; }
+      body { background: #fff !important; color: #111 !important; }
+      body * { visibility: hidden !important; }
+      #receipt, #receipt * { visibility: visible !important; }
+      #receipt { position: absolute !important; inset: 0 auto auto 0 !important; width: 100% !important; max-width: none !important; margin: 0 !important; box-shadow: none !important; }
+      .preview-scroll { max-height: none !important; overflow: visible !important; padding: 0 !important; background: #fff !important; }
+      .receipt-paper { box-shadow: none !important; margin: 0 auto !important; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="brand" href="index.html" aria-label="QuickReceipt home">
+        <span class="brand-mark" aria-hidden="true">Q</span>
+        <span><span class="brand-name">QuickReceipt</span><span class="pitch">Professional receipts, ready in seconds.</span></span>
+      </a>
+      <nav class="header-actions" aria-label="Main navigation">
+        <a class="button small" href="index.html">Generator</a>
+        <a class="button small" href="how-to-use.html">How to use</a>
+        <a class="button small" href="donation.html">Donation</a>
+        <a class="button small" href="contact.html">Contact</a>
+        <button class="button small" id="newReceiptBtn" type="button">＋ New receipt</button>
+        <button class="theme-button" id="themeBtn" type="button" aria-label="Switch color theme" title="Switch color theme">☾</button>
+      </nav>
+    </div>
+  </header>
+  <button class="button primary mobile-preview-button" id="mobilePreviewBtn" type="button">Preview receipt ↓</button>
+  <main>
+    <div class="wrap">
+      <section class="intro" aria-labelledby="pageTitle">
+        <p class="eyebrow">Free · Private · No account needed</p>
+        <h1 id="pageTitle">A better receipt, in under a minute.</h1>
+        <p>Add your business details and sale items. Your receipt updates as you type and stays right here on your device.</p>
+      </section>
+      <section class="workspace" aria-label="Receipt generator">
+        <form class="panel form-panel" id="receiptForm" novalidate>
+          <div class="panel-title">
+            <div><h2>Receipt details</h2><p>Your draft saves automatically in this browser.</p></div>
+            <span aria-hidden="true">✦</span>
+          </div>
+          <section class="form-section" aria-labelledby="businessHeading">
+            <h3 class="section-label" id="businessHeading">Business</h3>
+            <div class="grid">
+              <div class="field full"><label for="businessName">Business name <span aria-hidden="true">*</span></label><input id="businessName" name="businessName" autocomplete="organization" required></div>
+              <div class="field full"><label for="businessAddress">Address</label><textarea id="businessAddress" name="businessAddress" autocomplete="street-address"></textarea></div>
+              <div class="field"><label for="businessContact">Phone, email, or website</label><input id="businessContact" name="businessContact" autocomplete="tel"></div>
+              <div class="field"><label for="taxId">Tax ID</label><input id="taxId" name="taxId"></div>
+              <div class="field full"><label for="logoInput">Business logo (optional)</label><input id="logoInput" type="file" accept="image/*" aria-describedby="logoHint"><span class="hint" id="logoHint">Image file, up to 1 MB. Stored only in this browser.</span></div>
+            </div>
+          </section>
+          <section class="form-section" aria-labelledby="receiptHeading">
+            <h3 class="section-label" id="receiptHeading">Receipt</h3>
+            <div class="grid">
+              <div class="field"><label for="receiptNumber">Receipt number</label><input id="receiptNumber" name="receiptNumber"></div>
+              <div class="field"><label for="receiptDate">Date and time</label><input id="receiptDate" name="receiptDate" type="datetime-local"></div>
+              <div class="field"><label for="staffName">Staff / cashier</label><input id="staffName" name="staffName" autocomplete="name"></div>
+              <div class="field"><label for="customerName">Customer</label><input id="customerName" name="customerName" autocomplete="name"></div>
+            </div>
+          </section>
+          <section class="form-section" aria-labelledby="itemsHeading">
+            <h3 class="section-label" id="itemsHeading">Items</h3>
+            <div class="item-list" id="itemList" aria-live="polite"></div>
+            <div class="items-actions"><button class="button small" id="addItemBtn" type="button">＋ Add item</button><span class="items-subtotal">Subtotal <strong id="formSubtotal"></strong></span></div>
+          </section>
+          <section class="form-section" aria-labelledby="adjustmentsHeading">
+            <h3 class="section-label" id="adjustmentsHeading">Adjustments</h3>
+            <div class="grid">
+              <div class="field">
+                <label for="discountValue">Discount</label>
+                <div class="inline-choice"><input id="discountValue" name="discountValue" type="number" min="0" step="any" placeholder="0"><select id="discountType" name="discountType" aria-label="Discount type"><option value="fixed">Fixed</option><option value="percent">Percent</option></select></div>
+              </div>
+              <div class="field"><label for="taxName">Tax name</label><input id="taxName" name="taxName" placeholder="e.g. VAT"></div>
+              <div class="field"><label for="taxRate">Tax rate (%)</label><input id="taxRate" name="taxRate" type="number" min="0" max="100" step="any" placeholder="0"></div>
+              <div class="field"><label for="tipValue">Tip / service charge</label><input id="tipValue" name="tipValue" type="number" min="0" step="any" placeholder="0"></div>
+              <div class="field full"><div class="check-row"><input id="taxInclusive" name="taxInclusive" type="checkbox"><label for="taxInclusive">Prices include tax</label></div></div>
+            </div>
+          </section>
+          <section class="form-section" aria-labelledby="paymentHeading">
+            <h3 class="section-label" id="paymentHeading">Payment</h3>
+            <div class="grid">
+              <div class="field"><label for="paymentMethod">Payment method</label><select id="paymentMethod" name="paymentMethod"><option value="cash">Cash</option><option value="card">Card</option><option value="transfer">Transfer</option></select></div>
+              <div class="field"><label for="currency">Currency</label><select id="currency" name="currency" aria-label="Currency (ISO 4217)"></select></div>
+              <div class="field payment-extra" id="cardField" hidden><label for="cardLast4">Card last 4 digits</label><input id="cardLast4" name="cardLast4" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="1234"></div>
+              <div class="field" id="tenderedField"><label for="tendered">Amount tendered</label><input id="tendered" name="tendered" type="number" min="0" step="any" placeholder="Optional"></div>
+            </div>
+          </section>
+          <section class="form-section" aria-labelledby="finishHeading">
+            <h3 class="section-label" id="finishHeading">Finishing touches</h3>
+            <div class="grid">
+              <div class="field full"><label for="thankYou">Thank-you line</label><input id="thankYou" name="thankYou" maxlength="100"></div>
+              <div class="field full"><label for="accentColor">Brand accent color</label><input id="accentColor" name="accentColor" type="color" value="#0f766e" aria-label="Brand accent color"></div>
+            </div>
+            <div class="check-row"><input id="sampleToggle" name="sampleToggle" type="checkbox" checked><label for="sampleToggle">Show SAMPLE watermark on receipt</label></div>
+          </section>
+          <p class="validation" id="validationMessage" role="status"></p>
+          <div class="form-footer"><button class="button danger small" id="clearDataBtn" type="button">Clear all data</button><span class="hint">Your receipt data never leaves this device.</span></div>
+        </form>
+        <aside class="preview-column" aria-label="Live receipt preview">
+          <div class="panel preview-panel">
+            <div class="preview-toolbar">
+              <h2>Preview</h2>
+              <label class="sr-only" for="templateSelect">Receipt template</label>
+              <select class="template-select" id="templateSelect">
+                <option value="thermal">Thermal · 80 mm</option>
+                <option value="classic">Classic · A4 / Letter</option>
+                <option value="modern">Modern · Accent</option>
+              </select>
+            </div>
+            <div class="preview-scroll">
+              <article id="receipt" class="receipt-paper template-thermal" aria-label="Receipt preview">
+                <span class="sample-watermark" aria-hidden="true">SAMPLE</span>
+                <header class="receipt-head" id="previewHead"></header>
+                <hr class="receipt-divider">
+                <div class="receipt-meta" id="previewMeta"></div>
+                <div id="receiptItems"></div>
+                <hr class="receipt-divider">
+                <div class="receipt-totals" id="receiptTotals" aria-live="polite"></div>
+                <hr class="receipt-divider">
+                <div class="receipt-payment" id="receiptPayment"></div>
+                <p class="negative-change" id="changeWarning" hidden></p>
+                <p class="receipt-thanks" id="receiptThanks"></p>
+              </article>
+            </div>
+            <div class="preview-actions">
+              <button class="button primary" id="printBtn" type="button">Print receipt</button>
+              <button class="button" id="pdfBtn" type="button">Download PDF</button>
+              <button class="button" id="pngBtn" type="button">Download PNG</button>
+              <button class="button" id="copyBtn" type="button">Copy plain text</button>
+            </div>
+          </div>
+        </aside>
+      </section>
+    </div>
+    <section class="content-section alt" aria-labelledby="howHeading">
+      <div class="wrap">
+        <h2 class="section-heading" id="howHeading">How it works</h2>
+        <p class="section-intro">Everything you need for a tidy, customer-ready receipt. No account or setup required.</p>
+        <div class="steps">
+          <article class="step-card"><span class="step-number">1</span><h3>Add your details</h3><p>Enter your business information and add the items from a real sale.</p></article>
+          <article class="step-card"><span class="step-number">2</span><h3>Make it yours</h3><p>Pick a currency and style, then add tax, a discount, or a tip if needed.</p></article>
+          <article class="step-card"><span class="step-number">3</span><h3>Share your receipt</h3><p>Print it, save it as a PDF or PNG, or copy the plain-text version.</p></article>
+        </div>
+      </div>
+    </section>
+    <section class="content-section" aria-labelledby="faqHeading">
+      <div class="wrap">
+        <h2 class="section-heading" id="faqHeading">Frequently asked questions</h2>
+        <p class="section-intro">A few quick answers about creating receipts with QuickReceipt.</p>
+        <div class="faq-list">
+          <article class="faq-item"><h3>Is this receipt generator free?</h3><p>Yes. QuickReceipt is free to use, with no sign-up and no paid features.</p></article>
+          <article class="faq-item"><h3>Is my business or customer data uploaded?</h3><p>No. Your details and draft are stored locally in this browser and are not sent to a server.</p></article>
+          <article class="faq-item"><h3>Can I print or save a receipt?</h3><p>Yes. Print directly from your browser, or download a PDF or PNG copy.</p></article>
+          <article class="faq-item"><h3>How are tax and discounts calculated?</h3><p>Discounts are taken off the subtotal before tax. Tax can be calculated as included in, or added to, item prices. Tips are not taxed.</p></article>
+          <article class="faq-item"><h3>Can I use these for official tax records?</h3><p>Receipt and tax rules vary by location. Check your local requirements and keep the records required for your business.</p></article>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <div class="wrap footer-inner">
+      <span>Create receipts only for sales you actually made.</span>
+      <span class="privacy-note"><span aria-hidden="true">🔒</span> Private by design · Data stays on your device</span>
+      <nav aria-label="Footer navigation">
+        <a href="index.html">Generator</a> · <a href="how-to-use.html">How to use</a> · <a href="donation.html">Donation</a> · <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </footer>
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+    (() => {
+      "use strict";
+      const STORAGE = { draft: "quickreceipt.draft.v1", business: "quickreceipt.business.v1", sequence: "quickreceipt.sequence.v1", theme: "quickreceipt.theme.v1", currencyMigration: "quickreceipt.currency-default-ngn.v1" };
+      const DEFAULT_CURRENCY = "NGN";
+      const currencyCodes = ("AED AFN ALL AMD ANG AOA ARS AUD AWG AZN BAM BBD BDT BGN BHD BIF BMD BND BOB BRL BSD BTN BWP BYN BZD CAD CDF CHF CLP CNY COP CRC CUP CVE CZK DJF DKK DOP DZD EGP ERN ETB EUR FJD FKP GBP GEL GHS GIP GMD GNF GTQ GYD HKD HNL HTG HUF IDR ILS INR IQD IRR ISK JMD JOD JPY KES KGS KHR KMF KPW KRW KWD KYD KZT LAK LBP LKR LRD LSL LYD MAD MDL MGA MKD MMK MNT MOP MRU MUR MVR MWK MXN MYR MZN NAD NGN NIO NOK NPR NZD OMR PAB PEN PGK PHP PKR PLN PYG QAR RON RSD RUB RWF SAR SBD SCR SDG SEK SGD SHP SLE SLL SOS SRD SSP STN SYP SZL THB TJS TMT TND TOP TRY TTD TWD TZS UAH UGX USD UYU UZS VES VND VUV WST XAF XCD XOF XPF YER ZAR ZMW ZWL").split(" ");
+      const $ = (id) => document.getElementById(id);
+      const form = $("receiptForm");
+      const itemList = $("itemList");
+      let logoData = "";
+      let toastTimer;
+
+      function safeGet(key) {
+        try { return localStorage.getItem(key); } catch (error) { console.warn("Could not read saved receipt data.", error); return null; }
+      }
+      function safeSet(key, value) {
+        try { localStorage.setItem(key, value); return true; } catch (error) { console.warn("Could not save receipt data.", error); showToast("Could not save in this browser. Storage may be full or disabled."); return false; }
+      }
+      function safeRemove(key) {
+        try { localStorage.removeItem(key); } catch (error) { console.warn("Could not clear saved receipt data.", error); showToast("Could not clear browser storage."); }
+      }
+      function showToast(message) {
+        const toast = $("toast");
+        toast.textContent = message;
+        toast.hidden = false;
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => { toast.hidden = true; }, 3000);
+      }
+      function toMinor(value, decimals) {
+        const raw = String(value ?? "").trim();
+        if (!raw || !/^\d*(?:\.\d*)?$/.test(raw)) return 0n;
+        const [wholeText = "0", fractionText = ""] = raw.split(".");
+        const factor = 10n ** BigInt(decimals);
+        const whole = BigInt(wholeText || "0");
+        const fraction = (fractionText + "0".repeat(decimals + 1)).slice(0, decimals + 1);
+        let minor = whole * factor + BigInt((fraction.slice(0, decimals) || "0").padEnd(decimals, "0"));
+        if (decimals >= 0 && Number(fraction[decimals] || "0") >= 5) minor += 1n;
+        return minor;
+      }
+      function parseScaled(value, places) {
+        const text = String(value ?? "").trim();
+        if (!/^\d*(?:\.\d*)?$/.test(text) || text === "" || text === ".") return 0n;
+        const [whole = "0", frac = ""] = text.split(".");
+        const factor = 10n ** BigInt(places);
+        const rounded = (frac + "0".repeat(places + 1)).slice(0, places + 1);
+        let scaled = BigInt(whole || "0") * factor + BigInt(rounded.slice(0, places) || "0");
+        if (Number(rounded[places] || "0") >= 5) scaled += 1n;
+        return scaled;
+      }
+      function halfUp(numerator, denominator) {
+        if (denominator <= 0n) return 0n;
+        return (numerator + denominator / 2n) / denominator;
+      }
+      function decimalsFor(code) {
+        try { return new Intl.NumberFormat("en", { style: "currency", currency: code }).resolvedOptions().maximumFractionDigits; }
+        catch { return 2; }
+      }
+      function currencyLocale(code) {
+        return code === "NGN" ? "en-NG" : undefined;
+      }
+      function currencySymbol(code) {
+        try { return new Intl.NumberFormat(currencyLocale(code), { style: "currency", currency: code }).formatToParts(0).find((part) => part.type === "currency").value; }
+        catch { return code; }
+      }
+      function formatMinor(amount, code, decimals = decimalsFor(code)) {
+        const negative = amount < 0n;
+        const abs = negative ? -amount : amount;
+        const divisor = 10n ** BigInt(decimals);
+        const whole = abs / divisor;
+        const fraction = (abs % divisor).toString().padStart(decimals, "0");
+        const locale = currencyLocale(code);
+        const grouped = new Intl.NumberFormat(locale, { maximumFractionDigits: 0 }).format(whole);
+        const localizedFraction = [...fraction].map((digit) => new Intl.NumberFormat(locale, { maximumFractionDigits: 0, useGrouping: false }).format(Number(digit))).join("");
+        const formatter = new Intl.NumberFormat(locale, { style: "currency", currency: code, minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+        return formatter.formatToParts(negative ? -1.5 : 1.5).map((part) => {
+          if (part.type === "integer") return grouped;
+          if (part.type === "fraction") return localizedFraction;
+          return part.value;
+        }).join("");
+      }
+      function formatQty(raw) {
+        if (raw === "" || raw == null) return "0";
+        const number = Number(raw);
+        return Number.isFinite(number) ? new Intl.NumberFormat(undefined, { maximumFractionDigits: 6 }).format(number) : "0";
+      }
+      function dateNowLocal() {
+        const now = new Date();
+        const offset = now.getTimezoneOffset() * 60000;
+        return new Date(now.getTime() - offset).toISOString().slice(0, 16);
+      }
+      function isoDate(value) {
+        if (!value) return "";
+        const date = new Date(value);
+        return Number.isNaN(date.getTime()) ? value : new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(date);
+      }
+      function esc(value) {
+        return String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
+      }
+      function fieldValue(name) { return form.elements.namedItem(name)?.value ?? ""; }
+      function getRows() {
+        return [...itemList.querySelectorAll(".item-row")].map((row) => ({
+          description: row.querySelector('[data-field="description"]').value.trim(),
+          quantity: row.querySelector('[data-field="quantity"]').value,
+          price: row.querySelector('[data-field="price"]').value
+        }));
+      }
+      function appendRow(item = {}) {
+        const row = document.createElement("div");
+        row.className = "item-row";
+        row.innerHTML = `<div class="item-row-top">
+          <div class="field description-field"><label>Description</label><input data-field="description" maxlength="90" aria-label="Item description" placeholder="Item or service"></div>
+          <div class="field"><label>Qty</label><input data-field="quantity" type="number" min="0" step="any" aria-label="Item quantity" placeholder="1"></div>
+          <div class="field"><label>Unit price</label><input data-field="price" type="number" min="0" step="any" aria-label="Unit price" placeholder="0.00"></div>
+          <div class="item-actions"><button type="button" class="icon-button duplicate-row" aria-label="Duplicate item row" title="Duplicate">⧉</button><button type="button" class="icon-button remove-row" aria-label="Remove item row" title="Remove">×</button></div>
+        </div><div class="line-total">Line total <strong></strong></div>`;
+        itemList.append(row);
+        row.querySelector('[data-field="description"]').value = item.description || "";
+        row.querySelector('[data-field="quantity"]').value = item.quantity ?? "1";
+        row.querySelector('[data-field="price"]').value = item.price ?? "";
+        return row;
+      }
+      function calculations() {
+        const code = $("currency").value || DEFAULT_CURRENCY;
+        const decimals = decimalsFor(code);
+        const rows = getRows().map((row) => {
+          const priceMinor = toMinor(row.price, decimals);
+          const qtyScaled = parseScaled(row.quantity, 6);
+          const amount = halfUp(priceMinor * qtyScaled, 1000000n);
+          return { ...row, priceMinor, amount };
+        });
+        const subtotal = rows.reduce((sum, row) => sum + row.amount, 0n);
+        const discountRaw = fieldValue("discountValue");
+        const discountScaled = parseScaled(discountRaw, 6);
+        const discountType = $("discountType").value;
+        const desiredDiscount = discountType === "percent"
+          ? halfUp(subtotal * discountScaled, 100n * 1000000n)
+          : toMinor(discountRaw, decimals);
+        const discount = desiredDiscount > subtotal ? subtotal : desiredDiscount;
+        const discounted = subtotal - discount;
+        const rateScaled = parseScaled(fieldValue("taxRate"), 6);
+        const tax = $("taxInclusive").checked
+          ? halfUp(discounted * rateScaled, 100n * 1000000n + rateScaled)
+          : halfUp(discounted * rateScaled, 100n * 1000000n);
+        const tip = toMinor(fieldValue("tipValue"), decimals);
+        const total = $("taxInclusive").checked ? discounted + tip : discounted + tax + tip;
+        const tenderedText = fieldValue("tendered");
+        const tendered = tenderedText.trim() ? toMinor(tenderedText, decimals) : null;
+        return { code, decimals, rows, subtotal, discount, discounted, tax, tip, total, tendered, change: tendered === null ? null : tendered - total };
+      }
+      function setText(id, value) { $(id).textContent = value; }
+      function render() {
+        const c = calculations();
+        [...itemList.querySelectorAll(".item-row")].forEach((rowElement, index) => {
+          rowElement.querySelector(".line-total strong").textContent = formatMinor(c.rows[index].amount, c.code, c.decimals);
+        });
+        const business = fieldValue("businessName").trim();
+        const address = fieldValue("businessAddress").trim();
+        const contact = fieldValue("businessContact").trim();
+        const taxId = fieldValue("taxId").trim();
+        const logo = logoData ? `<img class="receipt-logo" src="${logoData}" alt="">` : "";
+        const contactLines = [address, contact].filter(Boolean).map(esc).join("<br>");
+        $("previewHead").innerHTML = `${logo}<div><div class="receipt-business">${esc(business || "Your business name")}</div>${contactLines ? `<div class="receipt-contact">${contactLines}</div>` : ""}${taxId ? `<div class="receipt-taxid">Tax ID: ${esc(taxId)}</div>` : ""}</div>`;
+        const meta = [
+          ["Receipt", fieldValue("receiptNumber").trim()],
+          ["Date", isoDate(fieldValue("receiptDate"))],
+          ["Staff", fieldValue("staffName").trim()],
+          ["Customer", fieldValue("customerName").trim()]
+        ].filter((entry) => entry[1]);
+        $("previewMeta").innerHTML = meta.map(([label, value]) => `<span>${label}</span><strong>${esc(value)}</strong>`).join("");
+        const shownRows = c.rows.filter((row) => row.description || row.price > 0n);
+        if (shownRows.length) {
+          const isThermal = $("templateSelect").value === "thermal";
+          $("receiptItems").innerHTML = `<table class="receipt-table"><thead><tr><th class="item-description">Item</th><th class="qty-col">Qty</th><th class="price-col">Price</th><th class="total-col">Total</th></tr></thead><tbody>${shownRows.map((row) => `<tr><td>${esc(row.description || "Item")}</td><td>${esc(formatQty(row.quantity))}</td><td class="price-col">${formatMinor(row.priceMinor, c.code, c.decimals)}</td><td>${formatMinor(row.amount, c.code, c.decimals)}</td></tr>`).join("")}</tbody></table>`;
+          $("receiptItems").setAttribute("aria-label", isThermal ? "Receipt items" : "Itemized receipt");
+        } else $("receiptItems").innerHTML = "";
+        const totalRows = [`<div class="receipt-total-row"><span>Subtotal</span><span>${formatMinor(c.subtotal, c.code, c.decimals)}</span></div>`];
+        if (c.discount > 0n) totalRows.push(`<div class="receipt-total-row"><span>Discount${$("discountType").value === "percent" && fieldValue("discountValue") ? ` (${esc(fieldValue("discountValue"))}%)` : ""}</span><span>−${formatMinor(c.discount, c.code, c.decimals)}</span></div>`);
+        const taxName = fieldValue("taxName").trim() || "Tax";
+        if (c.tax > 0n || fieldValue("taxRate").trim()) totalRows.push(`<div class="receipt-total-row"><span>${esc(taxName)}${fieldValue("taxRate").trim() ? ` (${esc(fieldValue("taxRate"))}%)` : ""}${$("taxInclusive").checked ? " included" : ""}</span><span>${formatMinor(c.tax, c.code, c.decimals)}</span></div>`);
+        if (c.tip > 0n) totalRows.push(`<div class="receipt-total-row"><span>Tip / service charge</span><span>${formatMinor(c.tip, c.code, c.decimals)}</span></div>`);
+        totalRows.push(`<div class="receipt-total-row grand"><span>TOTAL</span><span>${formatMinor(c.total, c.code, c.decimals)}</span></div>`);
+        $("receiptTotals").innerHTML = totalRows.join("");
+        $("formSubtotal").textContent = formatMinor(c.subtotal, c.code, c.decimals);
+        const method = $("paymentMethod").value;
+        const methodText = method === "card" ? `Card${fieldValue("cardLast4").trim() ? ` ···· ${esc(fieldValue("cardLast4").trim())}` : ""}` : method === "transfer" ? "Transfer" : "Cash";
+        const paymentRows = [`<div class="receipt-payment-row"><span>Payment method</span><strong>${methodText}</strong></div>`];
+        if (c.tendered !== null) paymentRows.push(`<div class="receipt-payment-row"><span>Amount tendered</span><strong>${formatMinor(c.tendered, c.code, c.decimals)}</strong></div>`);
+        if (c.change !== null && c.change >= 0n) paymentRows.push(`<div class="receipt-payment-row"><span>Change</span><strong>${formatMinor(c.change, c.code, c.decimals)}</strong></div>`);
+        $("receiptPayment").innerHTML = paymentRows.join("");
+        $("changeWarning").hidden = !(c.change !== null && c.change < 0n);
+        $("changeWarning").textContent = c.change !== null && c.change < 0n ? `Amount tendered is ${formatMinor(-c.change, c.code, c.decimals)} short of the total.` : "";
+        setText("receiptThanks", fieldValue("thankYou").trim());
+        $("receipt").className = `receipt-paper template-${$("templateSelect").value}${$("sampleToggle").checked ? " is-sample" : ""}`;
+        $("receipt").style.setProperty("--receipt-accent", $("accentColor").value || "#0f766e");
+        $("cardField").hidden = method !== "card";
+        $("tenderedField").hidden = method !== "cash";
+        validate();
+      }
+      function validate() {
+        const messages = [];
+        if (!$("businessName").value.trim()) messages.push("Add your business name to complete the receipt.");
+        const rows = getRows();
+        rows.forEach((row, index) => {
+          if ((row.description || row.price) && (!row.quantity || Number(row.quantity) <= 0)) messages.push(`Item ${index + 1}: enter a quantity greater than zero.`);
+          if (row.price && Number(row.price) < 0) messages.push(`Item ${index + 1}: unit price cannot be negative.`);
+        });
+        if (fieldValue("discountValue") && Number(fieldValue("discountValue")) < 0) messages.push("Discount cannot be negative.");
+        if (fieldValue("taxRate") && Number(fieldValue("taxRate")) < 0) messages.push("Tax rate cannot be negative.");
+        else if (fieldValue("taxRate") && Number(fieldValue("taxRate")) > 100) messages.push("Tax rate cannot be greater than 100%.");
+        if (fieldValue("tipValue") && Number(fieldValue("tipValue")) < 0) messages.push("Tip or service charge cannot be negative.");
+        if (fieldValue("tendered") && Number(fieldValue("tendered")) < 0) messages.push("Amount tendered cannot be negative.");
+        if (fieldValue("cardLast4") && !/^\d{4}$/.test(fieldValue("cardLast4"))) messages.push("Enter exactly 4 digits for the card number, or leave it blank.");
+        $("validationMessage").textContent = messages[0] || "";
+        return messages.length === 0;
+      }
+      function saveDraft() {
+        const draft = {};
+        [...form.elements].forEach((el) => {
+          if (!el.name || el.type === "file") return;
+          draft[el.name] = el.type === "checkbox" ? el.checked : el.value;
+        });
+        draft.items = getRows();
+        draft.logoData = logoData;
+        safeSet(STORAGE.draft, JSON.stringify(draft));
+        safeSet(STORAGE.business, JSON.stringify({
+          businessName: draft.businessName, businessAddress: draft.businessAddress,
+          businessContact: draft.businessContact, taxId: draft.taxId, logoData
+        }));
+      }
+      function restoreFields(data) {
+        if (!data || typeof data !== "object") return;
+        [...form.elements].forEach((el) => {
+          if (!el.name || el.type === "file" || data[el.name] === undefined) return;
+          if (el.type === "checkbox") el.checked = Boolean(data[el.name]);
+          else el.value = data[el.name];
+        });
+        if (typeof data.logoData === "string" && data.logoData.startsWith("data:image/")) logoData = data.logoData;
+        itemList.replaceChildren();
+        (Array.isArray(data.items) && data.items.length ? data.items : [{ description: "", quantity: "1", price: "" }]).forEach(appendRow);
+      }
+      function generateReceiptNumber() {
+        let sequence = 1;
+        const stored = Number(safeGet(STORAGE.sequence));
+        if (Number.isSafeInteger(stored) && stored > 0) sequence = stored;
+        const current = `QR-${String(sequence).padStart(5, "0")}`;
+        safeSet(STORAGE.sequence, String(sequence + 1));
+        return current;
+      }
+      function initCurrencyOptions() {
+        const select = $("currency");
+        currencyCodes.forEach((code) => {
+          try {
+            const label = `${code} · ${currencySymbol(code)}`;
+            select.add(new Option(label, code));
+          } catch (error) { console.warn(`Skipping unsupported currency code ${code}.`, error); }
+        });
+      }
+      function makePlainText() {
+        const c = calculations();
+        const width = $("templateSelect").value === "thermal" ? 40 : 56;
+        const lines = [];
+        const add = (value = "") => lines.push(String(value).slice(0, width));
+        const center = (value) => add(value.length > width ? value.slice(0, width) : value.padStart((width + value.length) / 2).padEnd(width));
+        const rule = "-".repeat(width);
+        const business = fieldValue("businessName").trim();
+        if (business) center(business);
+        if (fieldValue("businessAddress").trim()) fieldValue("businessAddress").split(/\r?\n/).forEach(add);
+        if (fieldValue("businessContact").trim()) add(fieldValue("businessContact").trim());
+        if (fieldValue("taxId").trim()) add(`Tax ID: ${fieldValue("taxId").trim()}`);
+        add(rule);
+        if (fieldValue("receiptNumber").trim()) add(`Receipt: ${fieldValue("receiptNumber").trim()}`);
+        if (fieldValue("receiptDate")) add(`Date: ${isoDate(fieldValue("receiptDate"))}`);
+        if (fieldValue("staffName").trim()) add(`Staff: ${fieldValue("staffName").trim()}`);
+        if (fieldValue("customerName").trim()) add(`Customer: ${fieldValue("customerName").trim()}`);
+        add(rule);
+        c.rows.filter((row) => row.description || row.price > 0n).forEach((row) => {
+          const name = row.description || "Item";
+          add(name.length > width ? `${name.slice(0, width - 1)}…` : name);
+          const qtyPrice = `${formatQty(row.quantity)} × ${formatMinor(row.priceMinor, c.code, c.decimals)}`;
+          const amount = formatMinor(row.amount, c.code, c.decimals);
+          add(`${qtyPrice}  ${amount.padStart(Math.max(0, width - qtyPrice.length - 2))}`);
+        });
+        add(rule);
+        const moneyRow = (label, amount) => add(`${label}${formatMinor(amount, c.code, c.decimals).padStart(Math.max(0, width - label.length))}`);
+        moneyRow("Subtotal", c.subtotal);
+        if (c.discount > 0n) moneyRow("Discount", -c.discount);
+        if (c.tax > 0n || fieldValue("taxRate").trim()) moneyRow(fieldValue("taxName").trim() || "Tax", c.tax);
+        if (c.tip > 0n) moneyRow("Tip / service", c.tip);
+        add(rule);
+        moneyRow("TOTAL", c.total);
+        add(rule);
+        add(`Payment: ${$("paymentMethod").value}`);
+        if (c.tendered !== null) moneyRow("Tendered", c.tendered);
+        if (c.change !== null && c.change >= 0n) moneyRow("Change", c.change);
+        if (c.change !== null && c.change < 0n) add(`Amount short: ${formatMinor(-c.change, c.code, c.decimals)}`);
+        if (fieldValue("thankYou").trim()) { add(); center(fieldValue("thankYou").trim()); }
+        if ($("sampleToggle").checked) center("SAMPLE");
+        return lines.join("\n");
+      }
+      async function captureReceipt() {
+        if (typeof window.html2canvas !== "function") throw new Error("Receipt image library did not load. Check your connection and try again.");
+        return window.html2canvas($("receipt"), { scale: 2, backgroundColor: "#ffffff", useCORS: true, logging: false });
+      }
+      async function downloadImage(type) {
+        try {
+          const canvas = await captureReceipt();
+          if (type === "png") {
+            const link = document.createElement("a");
+            link.download = `${fieldValue("receiptNumber") || "receipt"}.png`;
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+          } else {
+            const jspdf = window.jspdf?.jsPDF;
+            if (!jspdf) throw new Error("PDF library did not load. Check your connection and try again.");
+            const pdf = new jspdf({ orientation: "portrait", unit: "mm", format: $("templateSelect").value === "thermal" ? [80, Math.max(100, canvas.height / canvas.width * 80)] : "a4" });
+            const margin = $("templateSelect").value === "thermal" ? 0 : 10;
+            const pageW = pdf.internal.pageSize.getWidth() - margin * 2;
+            const pageH = pdf.internal.pageSize.getHeight() - margin * 2;
+            const imageData = canvas.toDataURL("image/png");
+            const imageH = canvas.height / canvas.width * pageW;
+            if (imageH <= pageH) pdf.addImage(imageData, "PNG", margin, margin, pageW, imageH);
+            else {
+              let remaining = imageH;
+              let offset = 0;
+              while (remaining > 0) {
+                pdf.addImage(imageData, "PNG", margin, margin - offset, pageW, imageH);
+                remaining -= pageH;
+                offset += pageH;
+                if (remaining > 0) pdf.addPage();
+              }
+            }
+            pdf.save(`${fieldValue("receiptNumber") || "receipt"}.pdf`);
+          }
+          showToast(`Receipt ${type.toUpperCase()} downloaded.`);
+        } catch (error) {
+          console.error(`Unable to create ${type.toUpperCase()} file.`, error);
+          showToast(error.message || `Unable to create ${type.toUpperCase()} file.`);
+        }
+      }
+      function resetToFresh() {
+        form.reset();
+        itemList.replaceChildren();
+        logoData = "";
+        $("currency").value = DEFAULT_CURRENCY;
+        $("receiptDate").value = dateNowLocal();
+        $("receiptNumber").value = generateReceiptNumber();
+        $("thankYou").value = "Thank you for your purchase!";
+        $("accentColor").value = "#0f766e";
+        $("sampleToggle").checked = false;
+        appendRow({ description: "", quantity: "1", price: "" });
+        render();
+      }
+
+      initCurrencyOptions();
+      $("currency").value = DEFAULT_CURRENCY;
+      $("receiptDate").value = dateNowLocal();
+      $("thankYou").value = "Thank you for your purchase!";
+      const draftStored = safeGet(STORAGE.draft);
+      let loaded = false;
+      if (draftStored) {
+        try {
+          const draft = JSON.parse(draftStored);
+          if (safeGet(STORAGE.currencyMigration) !== "done") {
+            if (draft.currency === "USD") {
+              draft.currency = DEFAULT_CURRENCY;
+              if (safeSet(STORAGE.draft, JSON.stringify(draft))) safeSet(STORAGE.currencyMigration, "done");
+            } else safeSet(STORAGE.currencyMigration, "done");
+          }
+          restoreFields(draft);
+          loaded = true;
+        }
+        catch (error) { console.warn("Saved receipt draft was invalid and has been ignored.", error); }
+      }
+      if (!loaded) {
+        $("receiptNumber").value = generateReceiptNumber();
+        const businessStored = safeGet(STORAGE.business);
+        if (businessStored) {
+          try {
+            const business = JSON.parse(businessStored);
+            restoreFields({ ...business, receiptNumber: $("receiptNumber").value, receiptDate: dateNowLocal(), thankYou: $("thankYou").value, currency: DEFAULT_CURRENCY, sampleToggle: true, items: [
+              { description: "Handmade ceramic mug", quantity: "2", price: "18.00" },
+              { description: "Gift wrapping", quantity: "1", price: "3.50" }
+            ] });
+          } catch (error) { console.warn("Saved business details were invalid and have been ignored.", error); }
+        } else {
+          restoreFields({
+            businessName: "Harbor & Pine Goods", businessAddress: "18 Market Lane\nPortland, OR 97205",
+            businessContact: "hello@harborandpine.example", taxId: "", receiptNumber: $("receiptNumber").value,
+            receiptDate: dateNowLocal(), staffName: "Jamie", customerName: "", currency: DEFAULT_CURRENCY,
+            discountValue: "", discountType: "fixed", taxName: "Sales tax", taxRate: "8.5",
+            taxInclusive: false, tipValue: "3.00", paymentMethod: "cash", tendered: "50.00",
+            thankYou: $("thankYou").value, accentColor: "#0f766e", sampleToggle: true,
+            items: [
+              { description: "Handmade ceramic mug", quantity: "2", price: "18.00" },
+              { description: "Gift wrapping", quantity: "1", price: "3.50" }
+            ]
+          });
+        }
+        safeSet(STORAGE.currencyMigration, "done");
+      }
+      $("themeBtn").addEventListener("click", () => {
+        document.body.classList.toggle("dark");
+        safeSet(STORAGE.theme, document.body.classList.contains("dark") ? "dark" : "light");
+        $("themeBtn").textContent = document.body.classList.contains("dark") ? "☀" : "☾";
+      });
+      if (safeGet(STORAGE.theme) === "dark") { document.body.classList.add("dark"); $("themeBtn").textContent = "☀"; }
+      $("newReceiptBtn").addEventListener("click", () => {
+        const currency = $("currency").value || DEFAULT_CURRENCY;
+        const business = {
+          businessName: fieldValue("businessName"), businessAddress: fieldValue("businessAddress"),
+          businessContact: fieldValue("businessContact"), taxId: fieldValue("taxId"), logoData
+        };
+        form.reset();
+        restoreFields({ ...business, receiptNumber: generateReceiptNumber(), receiptDate: dateNowLocal(), currency, thankYou: "Thank you for your purchase!", sampleToggle: false, items: [{ description: "", quantity: "1", price: "" }] });
+        $("accentColor").value = "#0f766e";
+        saveDraft(); render(); $("businessName").focus();
+      });
+      $("addItemBtn").addEventListener("click", () => { appendRow({ quantity: "1" }).querySelector('[data-field="description"]').focus(); render(); saveDraft(); });
+      itemList.addEventListener("click", (event) => {
+        const button = event.target.closest("button");
+        if (!button) return;
+        const row = button.closest(".item-row");
+        if (button.classList.contains("duplicate-row")) {
+          const copy = appendRow({
+            description: row.querySelector('[data-field="description"]').value,
+            quantity: row.querySelector('[data-field="quantity"]').value,
+            price: row.querySelector('[data-field="price"]').value
+          });
+          copy.querySelector('[data-field="description"]').focus();
+        } else if (button.classList.contains("remove-row")) {
+          if (itemList.children.length === 1) {
+            row.querySelectorAll("input").forEach((input) => input.value = input.dataset.field === "quantity" ? "1" : "");
+          } else row.remove();
+        }
+        render(); saveDraft();
+      });
+      form.addEventListener("input", (event) => {
+        if (event.target.type === "file") return;
+        render(); saveDraft();
+      });
+      form.addEventListener("change", (event) => {
+        if (event.target.type === "file") return;
+        render(); saveDraft();
+      });
+      $("templateSelect").addEventListener("change", render);
+      $("logoInput").addEventListener("change", () => {
+        const file = $("logoInput").files?.[0];
+        if (!file) return;
+        if (!file.type.startsWith("image/")) { showToast("Choose an image file for your logo."); $("logoInput").value = ""; return; }
+        if (file.size > 1024 * 1024) { showToast("Logo must be 1 MB or smaller."); $("logoInput").value = ""; return; }
+        const reader = new FileReader();
+        reader.onload = () => { logoData = String(reader.result); render(); saveDraft(); showToast("Logo added to your receipt."); };
+        reader.onerror = () => { console.error("Unable to read the selected logo."); showToast("Unable to read that image. Please try another file."); };
+        reader.readAsDataURL(file);
+      });
+      $("printBtn").addEventListener("click", () => { render(); window.print(); });
+      $("pdfBtn").addEventListener("click", () => downloadImage("pdf"));
+      $("pngBtn").addEventListener("click", () => downloadImage("png"));
+      $("copyBtn").addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(makePlainText());
+          showToast("Receipt copied as plain text.");
+        } catch (error) {
+          console.error("Unable to write receipt to clipboard.", error);
+          showToast("Clipboard access is unavailable. Try copying from the preview or use a secure browser context.");
+        }
+      });
+      $("clearDataBtn").addEventListener("click", () => {
+        safeRemove(STORAGE.draft); safeRemove(STORAGE.business); safeRemove(STORAGE.sequence); safeRemove(STORAGE.theme); safeRemove(STORAGE.currencyMigration);
+        document.body.classList.remove("dark"); $("themeBtn").textContent = "☾";
+        logoData = "";
+        resetToFresh();
+        $("businessName").value = ""; $("businessAddress").value = ""; $("businessContact").value = ""; $("taxId").value = "";
+        saveDraft(); render(); showToast("Saved business details and receipt contents cleared.");
+      });
+      $("mobilePreviewBtn").addEventListener("click", () => $("receipt").scrollIntoView({ behavior: "smooth", block: "start" }));
+      window.addEventListener("beforeprint", render);
+      render();
+      saveDraft();
+    })();
+  </script>
+</body>
+</html>
